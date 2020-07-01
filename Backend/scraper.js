@@ -11,8 +11,12 @@ const simple_get = () => {
 	}
 	request(options)
 		.then($ => {
-			console.log('length:', $(".main-inner article").length)
-			console.log('header:', $(".site-header"))
+			//console.log('length:', $(".main-inner article .post-title a").length)
+			$(".main-inner article .post-title a").each((i, el) => {
+				console.log($(el).attr("href"))
+			})
+
+			//console.log('header:', $(".site-header"))
 		})
 		.catch(err => {
 			console.log('request error: ', err);
