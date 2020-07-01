@@ -9,4 +9,5 @@ SEO
 
 
 Questions:
-
+-What qualifies for image?
+-What is '...omit iframes altogether from the parsing'?

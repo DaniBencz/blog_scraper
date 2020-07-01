@@ -3,25 +3,54 @@
 const request = require('request-promise');
 const cheerio = require('cheerio');
 
-const simple_get = () => {
+const check_article_for_image = (article) => {
+	return new Promise((resolve, reject) => {
+		const options = {
+			method: 'GET',
+			uri: 'https://blog.risingstack.com' + article,
+			transform: body => cheerio.load(body),
+		}
+	
+		request(options)
+			.then($ => {
+				if ($(".post-content img").length === 0) resolve(options.uri);
+			})
+			.catch(err => {
+				console.log('request error: ', err);
+			})
+	});
+}
+
+const scrape = () => {
 	const options = {
 		method: 'GET',
 		uri: 'https://blog.risingstack.com',
 		transform: body => cheerio.load(body),
 	}
+
+	let articles_without_image = [];
 	request(options)
 		.then($ => {
-			//console.log('length:', $(".main-inner article .post-title a").length)
 			$(".main-inner article .post-title a").each((i, el) => {
-				console.log($(el).attr("href"))
+				//console.log($(el).attr("href"))
+
+				check_article_for_image($(el).attr("href"))
+					.then(result => {
+						console.log("result: ", result);
+						articles_without_image.push(result);
+					})
+
 			})
 
-			//console.log('header:', $(".site-header"))
 		})
 		.catch(err => {
 			console.log('request error: ', err);
+			return 'request error';
 		})
+
+	//await for this...
+	return articles_without_image;
 }
 
-simple_get();
+console.log(scrape());
 
