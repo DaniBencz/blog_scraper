@@ -8,7 +8,6 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
-// api to listen to FE requests
 app.get('/articles', (req, res) => {
 	res.json({
 		"hello": "world"
