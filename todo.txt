@@ -1,0 +1,18 @@
+
+https://blog.risingstack.com/node-hero-node-js-security-tutorial/
+
+Must:
+install axios
+install ESLint
+install helmet
+install retire
+install nsp
+
+Good To:
+PWA
+SEO
+
+
+Questions:
+-What qualifies for image?
+-
