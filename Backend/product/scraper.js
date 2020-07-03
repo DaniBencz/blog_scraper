@@ -30,7 +30,7 @@ const check_articles_for_image = (articles) => {
 					});
 			}
 			else {
-				process.stdout.write(`done`);
+				console.log('done scraping');
 				resolve(articles_without_image);
 			}
 		}
@@ -62,4 +62,4 @@ const scrape = (page_num = false) => {
 	});
 }
 
-console.log('scrape: ', scrape(2).then(val => console.log('val: ', val)));
+module.exports = { scrape };
