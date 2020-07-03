@@ -3,57 +3,63 @@
 const request = require('request-promise');
 const cheerio = require('cheerio');
 
-const check_article_for_image = (article) => {
+const check_articles_for_image = (articles) => {
 	return new Promise((resolve, reject) => {
-		const options = {
-			method: 'GET',
-			uri: 'https://blog.risingstack.com' + article,
-			transform: body => cheerio.load(body),
-		}
+		let articles_without_image = [];
+		let article_index = 0;
 
-		request(options)
-			.then($ => {
-				if ($(".post-content img")
-					.not(".post-author img, .share-icon-container img, iframe")
-					.length === 0) resolve(options.uri);
-			})
-			.catch(err => {
-				console.log('request error: ', err);
-			})
+		const next = () => {
+			if (article_index < articles.length) {
+				const options = {
+					method: 'GET',
+					uri: 'https://blog.risingstack.com' + articles[article_index],
+					transform: body => cheerio.load(body),
+				}
+
+				request(options)
+					.then($ => {
+						process.stdout.write(`.`);
+						if ($(".post-content img")
+							.not(".post-author img, .share-icon-container img, iframe")
+							.length === 0) articles_without_image.push(options.uri);
+						article_index++;
+						next();
+					})
+					.catch(err => {
+						console.log('request error: ', err);
+					});
+			}
+			else {
+				process.stdout.write(`done`);
+				resolve(articles_without_image);
+			}
+		}
+		next();
 	});
 }
 
 const scrape = (page_num = false) => {
-	const path = page_num ? '/page/' + page_num : '';
-	const options = {
-		method: 'GET',
-		uri: `https://blog.risingstack.com${path}`,
-		transform: body => cheerio.load(body),
-	}
+	return new Promise((resolve, reject) => {
+		const path = page_num ? '/page/' + page_num : '';
+		const options = {
+			method: 'GET',
+			uri: `https://blog.risingstack.com${path}`,
+			transform: body => cheerio.load(body),
+		}
 
-	let articles_without_image = [];
-	request(options)
-		.then($ => {
-			$(".main-inner article .post-title a").each((i, el) => {
-				//console.log($(el).attr("href"))
-
-				check_article_for_image($(el).attr("href"))
-					.then(result => {
-						console.log("result: ", result);
-						articles_without_image.push(result);
-					})
-
+		request(options)
+			.then(($) => {
+				let articles = [];
+				$(".main-inner article .post-title a").each((i, el) => {
+					articles.push($(el).attr("href"))
+				})
+				resolve(check_articles_for_image(articles))
 			})
-
-		})
-		.catch(err => {
-			console.log('request error: ', err);
-			return 'request error';
-		})
-
-	//await for this...
-	return articles_without_image;
+			.catch(err => {
+				console.log('request error: ', err);
+				reject('request error');
+			});
+	});
 }
 
-console.log(scrape(2));
-
+console.log('scrape: ', scrape(2).then(val => console.log('val: ', val)));
