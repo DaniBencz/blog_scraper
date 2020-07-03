@@ -10,10 +10,12 @@ const check_article_for_image = (article) => {
 			uri: 'https://blog.risingstack.com' + article,
 			transform: body => cheerio.load(body),
 		}
-	
+
 		request(options)
 			.then($ => {
-				if ($(".post-content img").length === 0) resolve(options.uri);
+				if ($(".post-content img")
+					.not(".post-author img, .share-icon-container img, iframe")
+					.length === 0) resolve(options.uri);
 			})
 			.catch(err => {
 				console.log('request error: ', err);
@@ -21,6 +23,7 @@ const check_article_for_image = (article) => {
 	});
 }
 
+//modify this to accept page-numbers
 const scrape = () => {
 	const options = {
 		method: 'GET',
