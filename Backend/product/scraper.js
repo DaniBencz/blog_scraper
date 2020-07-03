@@ -23,11 +23,11 @@ const check_article_for_image = (article) => {
 	});
 }
 
-//modify this to accept page-numbers
-const scrape = () => {
+const scrape = (page_num = false) => {
+	const path = page_num ? '/page/' + page_num : '';
 	const options = {
 		method: 'GET',
-		uri: 'https://blog.risingstack.com',
+		uri: `https://blog.risingstack.com${path}`,
 		transform: body => cheerio.load(body),
 	}
 
@@ -55,5 +55,5 @@ const scrape = () => {
 	return articles_without_image;
 }
 
-console.log(scrape());
+console.log(scrape(2));
 
