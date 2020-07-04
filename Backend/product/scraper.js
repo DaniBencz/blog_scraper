@@ -3,12 +3,12 @@
 const request = require('request-promise');
 const cheerio = require('cheerio');
 
-const check_articles_for_image = (articles) => {
+const scrapeArticlesByPage = (articles) => {
 	return new Promise((resolve, reject) => {
 		let articles_without_image = [];
 		let article_index = 0;
 
-		const next = () => {
+		const scarpeArticle = () => {
 			if (article_index < articles.length) {
 				const options = {
 					method: 'GET',
@@ -23,7 +23,7 @@ const check_articles_for_image = (articles) => {
 							.not(".post-author img, .share-icon-container img, iframe")
 							.length === 0) articles_without_image.push(options.uri);
 						article_index++;
-						next();
+						scarpeArticle();
 					})
 					.catch(err => {
 						console.log('request error: ', err);
@@ -31,16 +31,17 @@ const check_articles_for_image = (articles) => {
 			}
 			else {
 				console.log('done scraping');
+				// maybe no need for promise?
 				resolve(articles_without_image);
 			}
 		}
-		next();
+		scarpeArticle();
 	});
 }
 
-const scrape = (page_num = false) => {
+const getArticlesByPage = (page_num = false) => {
 	return new Promise((resolve, reject) => {
-		const path = page_num ? '/page/' + page_num : '';
+		const path = page_num > 1 ? '/page/' + page_num : '';
 		const options = {
 			method: 'GET',
 			uri: `https://blog.risingstack.com${path}`,
@@ -51,9 +52,9 @@ const scrape = (page_num = false) => {
 			.then(($) => {
 				let articles = [];
 				$(".main-inner article .post-title a").each((i, el) => {
-					articles.push($(el).attr("href"))
-				})
-				resolve(check_articles_for_image(articles))
+					articles.push($(el).attr("href"));
+				});
+				resolve(scrapeArticlesByPage(articles));
 			})
 			.catch(err => {
 				console.log('request error: ', err);
@@ -62,4 +63,24 @@ const scrape = (page_num = false) => {
 	});
 }
 
-module.exports = { scrape };
+const getAllArticles = (pages = 1) => {
+	return new Promise((resolve, reject) => {
+		let res = []
+		for (let i = 1; i <= pages; i++) {
+			res.push(getArticlesByPage(i))
+		}
+		Promise.all(res)
+			.then((articles_per_page) => {
+				let all_articles = articles_per_page.reduce((acc, cur) => {
+					return acc.concat(cur)
+				}, [])
+				resolve(all_articles);
+			})
+			.catch(err => console.log(err))
+	})
+
+}
+
+getAllArticles().then(list => console.log(list));
+
+module.exports = { getAllArticles };
