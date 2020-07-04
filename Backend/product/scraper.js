@@ -2,6 +2,16 @@
 
 const request = require('request-promise');
 const cheerio = require('cheerio');
+const mysql = require('mysql');
+require('dotenv').config();
+
+const conn = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+  multipleStatements: true
+});
 
 const scrapeArticlesByPage = (articles, useDB) => {
 	return new Promise((resolve, reject) => {
@@ -66,14 +76,13 @@ const filterArticlesByPage = (page_num, useDB) => {
 const getArticlesByPage = (page_num, useDB) => {
 	return new Promise((resolve, reject) => {
 
-		//if useDB
+		if (useDB) {
 			// lookup data in db
 				// if found
 					// resolve data
 				// else resolve(filterArticlesByPage(page_num));
-		//else resolve(filterArticlesByPage(page_num));
-
-		resolve(filterArticlesByPage(page_num, useDB));
+		}
+		else resolve(filterArticlesByPage(page_num, useDB));
 	});
 }
 
