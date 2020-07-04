@@ -3,7 +3,6 @@
 const request = require('request-promise');
 const cheerio = require('cheerio');
 const mysql = require('mysql');
-require('dotenv').config();
 
 const conn = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -77,16 +76,23 @@ const getArticlesByPage = (page_num, useDB) => {
 	return new Promise((resolve, reject) => {
 
 		if (useDB) {
-			// lookup data in db
-				// if found
-					// resolve data
-				// else resolve(filterArticlesByPage(page_num));
+			conn.query('SELECT page FROM articles_by_page LIMIT 1;', (err, rows) => {
+				if (err) {
+					console.error(err);
+					//resolve(filterArticlesByPage(page_num, useDB));
+				}
+				else console.log("cool")
+				// lookup data in db
+					// if found
+						// resolve data
+					// else resolve(filterArticlesByPage(page_num));
+			});
 		}
 		else resolve(filterArticlesByPage(page_num, useDB));
 	});
 }
 
-const getAllArticles = (pages = 1, useDB = false) => {
+const getAllArticles = (useDB = false, pages = 1) => {
 	return new Promise((resolve, reject) => {
 		let articles_per_page_promises = [];
 		for (let i = 1; i <= pages; i++) {
@@ -103,6 +109,6 @@ const getAllArticles = (pages = 1, useDB = false) => {
 	})
 }
 
-getAllArticles().then(list => console.log(list));
+//getAllArticles(1, 1).then(list => console.log(list));
 
 module.exports = { getAllArticles };
