@@ -4,9 +4,9 @@ import './App.css';
 import axios from 'axios';
 
 function App() {
-
 	const getArticles = () => {
 		axios({
+			//url: `${window.location.origin}/articles`,
 			url: 'http://localhost:4000/articles',
 			method: 'post',
 			data: {
