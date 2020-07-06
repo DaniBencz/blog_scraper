@@ -8,7 +8,7 @@ const typeChecker = (req, res, next) => {
 			req.body.pages > 0 &&
 			req.body.pages < 6)
 			next();
-		else res.send('Page argument must be a number between 1 and 5');
+		else res.status(400).send('Page argument must be a number between 1 and 5');
 	}
 	else next();
 };

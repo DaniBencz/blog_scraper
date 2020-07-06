@@ -72,6 +72,7 @@ const filterArticlesByPage = (page_num, useDB) => {
 				$(".main-inner article .post-title a").each((i, el) => {
 					articles.push($(el).attr("href"));
 				});
+				console.log(`serving page ${page_num} from web`);
 				resolve(scrapeArticlesByPage(page_num, articles, useDB));
 			})
 			.catch(err => {
@@ -99,6 +100,7 @@ const getArticlesByPage = (page_num, useDB) => {
 						else if (urls.length === 0) resolve(filterArticlesByPage(page_num, useDB));
 						else {
 							let urls_array = urls[0].urls.split(',');
+							console.log(`serving page ${page_num} from DB`);
 							resolve(urls_array);
 						}
 					})

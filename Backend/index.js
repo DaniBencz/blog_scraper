@@ -12,11 +12,13 @@ app.use(express.static(path.join(__dirname, 'user')));
 app.use(express.json());
 app.use('/articles', typeChecker);
 
-app.get('/articles', (req, res) => {
+app.post('/articles', (req, res) => {
 	const pages = req.body.pages;
-	getAllArticles(1, pages).then(articles => {
-		res.json({ articles });
-	})
+	getAllArticles(1, pages)
+		.then(articles => {
+			res.json({ articles });
+		})
+		.catch(() => res.status(500).send('Something went wrong, please try again later!'))
 });
 
 app.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
