@@ -14,4 +14,4 @@ SEO
 
 
 Questions:
--
+-is it a Get or a Post request
