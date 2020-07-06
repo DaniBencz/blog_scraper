@@ -26,7 +26,7 @@ const scrapeArticlesByPage = (page_num, articles, useDB) => {
 		let articles_without_image = [];
 		let article_index = 0;
 
-		const scarpeArticle = () => {
+		const scarpeSingleArticle = () => {
 			if (article_index < articles.length) {
 				const options = {
 					method: 'GET',
@@ -41,7 +41,7 @@ const scrapeArticlesByPage = (page_num, articles, useDB) => {
 							.not(".post-author img, .share-icon-container img, iframe")
 							.length === 0) articles_without_image.push(options.uri);
 						article_index++;
-						scarpeArticle();
+						scarpeSingleArticle();
 					})
 					.catch(err => {
 						console.log('request error: ', err);
@@ -53,7 +53,7 @@ const scrapeArticlesByPage = (page_num, articles, useDB) => {
 				resolve(articles_without_image);
 			}
 		}
-		scarpeArticle();
+		scarpeSingleArticle();
 	});
 }
 
@@ -126,4 +126,4 @@ const getAllArticles = (useDB = false, pages = 1) => {
 	})
 }
 
-module.exports = { getAllArticles };
+module.exports = getAllArticles;

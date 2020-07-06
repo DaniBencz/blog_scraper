@@ -5,19 +5,18 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 require('dotenv').config();
-const { getAllArticles } = require('./product/scraper')
+const getAllArticles = require('./product/scraper');
+const typeChecker = require('./middleware/typeChecker');
 
 app.use(express.static(path.join(__dirname, 'user')));
 app.use(express.json());
-
-//getAllArticles(1, 1).then(list => console.log(list));
+app.use('/articles', typeChecker);
 
 app.get('/articles', (req, res) => {
-	// check req.body for input
-	getAllArticles(1, 1).then(articles => {
+	const pages = req.body.pages;
+	getAllArticles(1, pages).then(articles => {
 		res.json({ articles });
 	})
 });
-
 
 app.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
