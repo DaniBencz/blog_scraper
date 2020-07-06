@@ -7,14 +7,8 @@ function App() {
 
 	const getArticles = () => {
 		axios({
-			url: 'http://localhost:3000/articles',
-			method: 'get',
-			// mode: 'no-cors',
-			// headers: {
-			// 	'Access-Control-Allow-Origin': '*',
-			// 	Accept: 'application/json',
-			// 	'Content-Type': 'application/json',
-			// },
+			url: 'http://localhost:4000/articles',
+			method: 'post',
 			data: {
 				pages: 2
 			}
