@@ -14,24 +14,42 @@ function App() {
 		pages.current = Number(event.target.value);
 	}
 
-	const getArticles = () => {
-		setLoading(1)
-		axios({
-			//url: `${window.location.origin}/articles`,
-			url: 'http://localhost:4000/articles',
-			method: 'post',
-			data: {
-				pages: pages.current
+	const validateInput = input => {
+		return new Promise((resolve, reject) => {
+			if (input === undefined) resolve(1);
+			if (typeof (input) === "number" && input >= 0 && input < 6) {
+				if (input === 0) input = 1;
+				resolve(input);
 			}
-		})
-			.then(resp => {
-				setArticles(resp.data.articles)
-				setLoading(0)
+			else reject();
+		});
+	}
+
+	const getArticles = () => {
+		validateInput(pages.current)
+			.then((input) => {
+				setLoading(1);
+				setArticles([]);
+				axios({
+					//url: `${window.location.origin}/articles`,
+					url: 'http://localhost:4000/articles',
+					method: 'post',
+					data: {
+						pages: input
+					}
+				})
+					.then(resp => {
+						setArticles(resp.data.articles)
+						setLoading(0)
+					})
+					.catch(err => {
+						setLoading(0);
+						alert('Something went wrong, please try again later!');
+					});
 			})
-			.catch(resp => {
-				setLoading(0)
-				// Something went wrong
-			})
+			.catch(() => {
+				console.log('Input must be a number between 1 and 5');
+			});
 	}
 
 	return (

@@ -10,7 +10,7 @@ const List = ({ articles }) => {
 				})}
 			</ul>
 		</div>
-	)
+	);
 }
 
 export default List;
