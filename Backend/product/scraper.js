@@ -22,7 +22,7 @@ const saveArticlesInDB = (page_num, articles_without_image) => {
 }
 
 const scrapeArticlesByPage = (page_num, articles, useDB) => {
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		let articles_without_image = [];
 		let article_index = 0;
 
@@ -45,6 +45,8 @@ const scrapeArticlesByPage = (page_num, articles, useDB) => {
 					})
 					.catch(err => {
 						console.log('request error: ', err);
+						article_index++;
+						scarpeSingleArticle();
 					});
 			}
 			else {
@@ -79,12 +81,11 @@ const filterArticlesByPage = (page_num, useDB) => {
 				console.log('request error: ', err);
 				reject('request error');
 			});
-	})
+	});
 }
 
 const getArticlesByPage = (page_num, useDB) => {
 	return new Promise((resolve, reject) => {
-
 		if (useDB) {
 			conn.query('SELECT page FROM articles_by_page LIMIT 1;', (err, rows) => {
 				if (err) {
@@ -103,7 +104,7 @@ const getArticlesByPage = (page_num, useDB) => {
 							console.log(`serving page ${page_num} from DB`);
 							resolve(urls_array);
 						}
-					})
+					});
 				}
 			});
 		}
@@ -124,8 +125,11 @@ const getAllArticles = (useDB = false, pages = 1) => {
 				});
 				resolve(all_articles);
 			})
-			.catch(err => console.log(err))
-	})
+			.catch(err => {
+				console.log(err);
+				reject();
+			})
+	});
 }
 
 module.exports = getAllArticles;

@@ -13,8 +13,7 @@ app.use(express.json());
 app.use('/articles', typeChecker);
 
 app.post('/articles', (req, res) => {
-	const pages = req.body.pages;
-	getAllArticles(0, pages)
+	getAllArticles(0, req.body.pages)
 		.then(articles => {
 			res.json({ articles });
 		})
