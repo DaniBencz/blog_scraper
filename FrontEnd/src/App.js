@@ -3,16 +3,19 @@ import './App.css';
 import List from './components/List';
 import axios from 'axios';
 import github from './github_blue.png';
+import loader from './straight-loader.gif'
 
 function App() {
 	let pages = useRef();
 	const [articles, setArticles] = useState([]);
+	const [loading, setLoading] = useState(0);
 
 	const updatePagesValue = (event) => {
 		pages.current = Number(event.target.value);
 	}
 
 	const getArticles = () => {
+		setLoading(1)
 		axios({
 			//url: `${window.location.origin}/articles`,
 			url: 'http://localhost:4000/articles',
@@ -23,8 +26,10 @@ function App() {
 		})
 			.then(resp => {
 				setArticles(resp.data.articles)
+				setLoading(0)
 			})
 			.catch(resp => {
+				setLoading(0)
 				// Something went wrong
 			})
 	}
@@ -41,6 +46,7 @@ function App() {
 				<input id="page_value" type="text" onChange={updatePagesValue}></input>
 				<button id="get_articles" onClick={getArticles}>Get Articles</button>
 			</div>
+			{loading ? <div id="loader"><img alt="loader" src={loader} width="200" height="150"></img></div> : null}
 			<List articles={articles}></List>
 		</div>
 	);
