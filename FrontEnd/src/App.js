@@ -30,8 +30,7 @@ function App () {
         setLoading(1)
         setArticles([])
         axios({
-          // url: `${window.location.origin}/articles`,
-          url: 'http://localhost:4000/articles',
+          url: `${window.location.origin}/articles`,
           method: 'post',
           data: {
             pages: input
