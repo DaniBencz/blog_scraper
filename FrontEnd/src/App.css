@@ -5,6 +5,10 @@
 	margin: 7px;
 }
 
+#description{
+	text-align: center;
+}
+
 #instructions {
 	margin-top: 5px;
 	color: white;

@@ -57,6 +57,10 @@ function App () {
           <img alt="gitHub repo" src={github} width="33" height="33"></img>
         </a>
       </div>
+      <div id="description">
+        <p>This is a practise project where <a target="_blank" href="https://blog.risingstack.com/">RisingStack blog</a> is
+          being scraped for articles that contain no images (other than logos) or iFrames.</p>
+			</div>
       <div id="form">
         <h2 id="instructions">Please type a number between 1 and 5, or leave empty!</h2>
         <input id="page_value" type="text" onChange={updatePagesValue}></input>
