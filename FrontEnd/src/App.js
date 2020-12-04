@@ -5,7 +5,7 @@ import axios from 'axios'
 import github from './github_blue.png'
 import loader from './straight-loader.gif'
 
-function App () {
+function App ({test}) {
   const pages = useRef()
   const [articles, setArticles] = useState([])
   const [loading, setLoading] = useState(0)
@@ -15,7 +15,8 @@ function App () {
   }
 
   const validateInput = input => {
-    return new Promise((resolve, reject) => {
+	if(test) return Promise.resolve(1)
+	else return new Promise((resolve, reject) => {
       if (input === undefined) resolve(1)
       if (typeof (input) === 'number' && input >= 0 && input < 6) {
         if (input === 0) input = 1
@@ -28,17 +29,18 @@ function App () {
     validateInput(pages.current)
       .then((input) => {
         setLoading(1)
-        setArticles([])
+		setArticles([])
         axios({
           url: `${window.location.origin}/articles`,
           method: 'post',
           data: {
             pages: input
           }
-        })
+		})
           .then(resp => {
+			console.log('resp.data: ', resp.data)
             setArticles(resp.data.articles)
-            setLoading(0)
+            // setLoading(0)
           })
           .catch(err => {
             setLoading(0)
@@ -58,9 +60,9 @@ function App () {
         </a>
       </div>
       <div id="description">
-        <p>This is a practise project where <a target="_blank" href="https://blog.risingstack.com/">RisingStack blog</a> is
+        <p>This is a practise project where <a target="_blank" rel="noopener noreferrer" href="https://blog.risingstack.com/">RisingStack blog</a> is
           being scraped for articles that contain no images (other than logos) or iFrames.</p>
-			</div>
+      </div>
       <div id="form">
         <h2 id="instructions">Please type a number between 1 and 5, or leave empty!</h2>
         <input id="page_value" type="text" onChange={updatePagesValue}></input>
