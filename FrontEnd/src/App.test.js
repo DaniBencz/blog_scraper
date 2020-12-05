@@ -31,6 +31,13 @@ test('renders api response', async () => {
 	fireEvent.click(submit)
 
 	await wait(() => expect(axios).toHaveBeenCalledTimes(1))	// need to await async method getArticles
+	await wait(() => expect(axios).toBeCalledWith({
+		url: `${window.location.origin}/articles`,
+		method: 'post',
+		data: {
+		  pages: 1
+		}
+	}))
 
 	// expectations bellow do the same thing, with different error messege, if failing
 	await wait(() => expect(getByText('hello')).toBeInTheDocument())
