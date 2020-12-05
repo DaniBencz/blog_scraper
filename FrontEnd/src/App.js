@@ -40,7 +40,7 @@ function App ({test}) {
           .then(resp => {
 			console.log('resp.data: ', resp.data)
             setArticles(resp.data.articles)
-            // setLoading(0)
+            setLoading(0)
           })
           .catch(err => {
             setLoading(0)
