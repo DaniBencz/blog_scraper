@@ -11,16 +11,17 @@ test('renders App', () => {
 
 jest.mock('axios')
 const getById = queryByAttribute.bind(null, 'id')	// handy custom function
+
 test('renders api response', async () => {
 
-	let { container, getByText } = render(<App test={true}/>)
+	let { container, getByText } = render(<App test={true} />)
 	let resp = {
 		data: {
 			articles: ['hello']
 		}
 	}
-	// axios.post.mockResolvedValue(resp)
-	// axios.post.mockImplementation(() => Promise.resolve(resp))
+	// axios.post.mockResolvedValue(resp)	// keeps returning undefined
+	// axios.post.mockImplementation(() => Promise.resolve(resp))	// keeps returning undefined
 	axios.mockReturnValue(Promise.resolve(resp))
 
 	const input = getById(container, 'page_value')
@@ -28,12 +29,12 @@ test('renders api response', async () => {
 
 	const submit = getById(container, 'get_articles')
 	fireEvent.click(submit)
-	
-	let loader = getById(container, 'loader')	// expected DOM element has to be defined inside after async method is done 
-	await wait(() => expect(getById(container, 'loader')).toBeInTheDocument())	// need to await async method getArticles
 
-	// await wait(() => expect(getByText('hello')).toBeInTheDocument())	// need to await async method getArticles
-	// await expect(findByText('hello')).toBeInTheDocument()
-	// since none of the above fancy shit seems to work, here we go:
-	setTimeout(expect(getByText('hello')).toBeInTheDocument(), 2000)
+	await wait(() => expect(axios).toHaveBeenCalledTimes(1))	// need to await async method getArticles
+
+	// expectations bellow do the same thing, with different error messege, if failing
+	await wait(() => expect(getByText('hello')).toBeInTheDocument())
+		// if fails, will complain for Timeout
+	expect(await findByText(container, 'hello')).toBeInTheDocument()
+		// if this fails, will give the right reason, unable to find element
 })
