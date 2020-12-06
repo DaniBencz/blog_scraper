@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`basic snapshot test 1`] = `
+<div
+  id="app"
+>
+  <div
+    id="repo"
+  >
+    <a
+      href="https://github.com/DaniBencz/blog_scraper"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      <img
+        alt="gitHub repo"
+        height="33"
+        src="github_blue.png"
+        width="33"
+      />
+    </a>
+  </div>
+  <div
+    id="description"
+  >
+    <p>
+      This is a practise project where 
+      <a
+        href="https://blog.risingstack.com/"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        RisingStack blog
+      </a>
+       is being scraped for articles that contain no images (other than logos) or iFrames.
+    </p>
+  </div>
+  <div
+    id="form"
+  >
+    <h2
+      id="instructions"
+    >
+      Please type a number between 1 and 5, or leave empty!
+    </h2>
+    <input
+      id="page_value"
+      onChange={[Function]}
+      type="text"
+    />
+    <button
+      id="get_articles"
+      onClick={[Function]}
+    >
+      Get Articles
+    </button>
+  </div>
+  <div
+    id="list"
+  >
+    <ul />
+  </div>
+</div>
+`;
