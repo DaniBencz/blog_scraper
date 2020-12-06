@@ -2,6 +2,7 @@ import React from 'react'
 import { render, fireEvent, queryByAttribute, wait, findByText } from '@testing-library/react'
 import App from './App'
 import axios from 'axios'
+import renderer from 'react-test-renderer'
 
 jest.mock('axios')
 const getById = queryByAttribute.bind(null, 'id')	// handy custom function
@@ -44,8 +45,15 @@ describe('playing with describe', () => {
 
 		// expectations bellow do the same thing, with different error messege, if failing
 		await wait(() => expect(getByText('hello')).toBeInTheDocument())
-		// if fails, will complain for Timeout
+			// if fails, will complain for Timeout
 		expect(await findByText(container, 'hello')).toBeInTheDocument()
-		// if this fails, will give the right reason, unable to find element
+			// if fails, will give the right reason: unable to find element
 	})
+})
+
+test('basic snapshot test', () => {
+	const component = renderer.create(<App test={true} />)
+	let tree = component.toJSON()
+	expect(tree).toMatchSnapshot()
+	// jest -u to update snapshots
 })
