@@ -16,7 +16,7 @@ describe('playing with describe', () => {
 	})
 
 
-	it('renders api response', async () => {
+	it('renders api response', async (/* done */) => {
 
 		let { container, getByText } = render(<App test={true} />)
 		let resp = {
@@ -48,6 +48,8 @@ describe('playing with describe', () => {
 			// if fails, will complain for Timeout
 		expect(await findByText(container, 'hello')).toBeInTheDocument()
 			// if fails, will give the right reason: unable to find element
+
+		// done()
 	})
 })
 
@@ -57,3 +59,5 @@ test('basic snapshot test', () => {
 	expect(tree).toMatchSnapshot()
 	// jest -u to update snapshots
 })
+
+// coverage-report: $ npm test -- --coverage
